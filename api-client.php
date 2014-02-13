@@ -1,15 +1,7 @@
 <?php
 namespace Shutterstock;
 
-include('../presto/presto.php');
-$presto = new \Presto\Presto();
-
-$api = new ShutterstockApiClient('hackbattle2013','9ed3c46d1b86096a09c33b8b3ff30c2233655178',$presto);
-
-print_r($api->similar(15484942, array('sort_method'=>'relevance') ));
-
-
-class ShutterstockApiClient {
+class Api {
 	
 	const VERSION = '2.0.0';
 	
@@ -32,11 +24,12 @@ class ShutterstockApiClient {
 	
 	public $response = null;
 	
-	public function __construct($api_username, $api_key, $rest_client) {
+	public function __construct($api_username, $api_key, $rest_client, $response) {
 		$this->api_username = $api_username;
 		$this->api_key = $api_key;
 		$this->rest_client = $rest_client;
 		$this->rest_client->setAuth($api_username, $api_key);
+		$this->response = $response;
 	}
 	
 	public function setLanguage($lang_code) {
@@ -45,31 +38,6 @@ class ShutterstockApiClient {
 	
 	public function buildUrl($path) {
 		return $this->protocol.$this->base_url.$path;
-	}
-	
-	public function getResources() {
-		$request_url = $this->buildUrl('/resources.json');
-		$response = $this->rest_client->get($request_url);
-		$this->processResponse($response);
-		print_r($response);
-	}
-	
-	public function test() {
-		$request_url = $this->buildUrl('/test/echo.json?test=connect');
-		$response = $this->rest_client->get($request_url);
-		$this->processResponse($response);
-		if ( $response->data['test']=='connect' ) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public function categories() {
-		$request_url = $this->buildUrl('/categories.json');
-		$response = $this->rest_client->get($request_url);
-		$this->processResponse($response);
-		return $response->data;
 	}
 	
 	public function setUser($username, $password) {
@@ -87,7 +55,7 @@ class ShutterstockApiClient {
 		if ( $this->checkUserConfig() ) {
 			$request_url = $this->buildUrl('/customer/'.$this->username.'.json');
 			$response = $this->rest_client->get($request_url, array('auth_token'=>$this->user_auth_token));
-			$this->processResponse($response);
+			$this->response->process($response);
 		} else {
 			return false;
 		}
@@ -109,20 +77,42 @@ class ShutterstockApiClient {
 		$request_params = array('username'=>$username, 'password'=>$password);
 		$response = $this->rest_client->post($request_url, $request_params);
 		$auth_token = null;
-		$this->processResponse($response);
+		$this->response->process($response);
 		$auth_token = $response->data['auth_token'];
 		return $auth_token;
 	}
 		
-	public function processResponse($response) {
-		if ( $response->is_success ) {
-			if ( strtolower(trim($response->header['Content-Type'])) == 'application/json' ) {
-				$response->data = json_decode($response->data, true);
-			} else {
-				trigger_error($response->data, E_USER_ERROR);
-			}
+	
+	public function getResources() {
+		$request_url = $this->buildUrl('/resources.json');
+		$response = $this->rest_client->get($request_url);
+		$this->response->process($response);
+		print_r($response);
+	}
+	
+	public function test() {
+		$request_url = $this->buildUrl('/test/echo.json?test=connect');
+		$response = $this->rest_client->get($request_url);
+		$this->response->process($response);
+		if ( $response->data['test']=='connect' ) {
+			return true;
 		} else {
-			trigger_error($response->error, E_USER_ERROR);
+			return false;
 		}
+	}
+
+	public function categories() {
+		$request_url = $this->buildUrl('/categories.json');
+		$response = $this->rest_client->get($request_url);
+		$this->response->process($response);
+		return $response->data;
+	}
+	
+	public function subscriptions() {
+    	
+	}
+	
+	public function lightboxes() {
+    	
 	}
 }
