@@ -1,4 +1,5 @@
 <?php
+namespace Shutterstock;
 
 class Response {
     
@@ -7,6 +8,7 @@ class Response {
     }
     
     public function process($response) {
+        var_dump($response);
 		if ( $response->is_success ) {
 			if ( strtolower(trim($response->header['Content-Type'])) == 'application/json' ) {
 				$response->data = json_decode($response->data, true);
