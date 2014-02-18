@@ -10,16 +10,21 @@ shutterstock-php-client
 Example
 
 //REST Client
-$presto = new Presto\Presto();
+
+    $presto = new Presto\Presto();
 
 //Response processor
-$response = new Shutterstock\Response();
+
+    $response = new Shutterstock\Response();
 
 // Create API instance, pass in REST client and Response processor
-$api = new Shutterstock\Api('[api username]','[api key]', $presto, $response);
+
+    $api = new Shutterstock\Api('[api username]','[api key]', $presto, $response);
 
 // Authenticate a user, will return a token for user on additional calls
-$api->authUser('[username]','[password]');
+
+    $api->authUser('[username]','[password]');
 
 // Set username and token to use for API calls
-$api->setUser('['username]', '[auth token]');
+
+    $api->setUser('['username]', '[auth token]');
