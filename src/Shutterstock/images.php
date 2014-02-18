@@ -2,23 +2,13 @@
 namespace Shutterstock;
 
 class Images {
-	
-	public function image($id, $lang_code=null) {
-		if ( is_null($lang_code) ) {
-			$lang_code = $this->lang_code;
-		}
-		$request_url = $this->buildUrl('/images/'.$id.'.json');
-		$response = $this->rest_client->get($request_url, array('language'=>$lang_code));
-		$this->processResponse($response);
-		return $response;
-	}
-	
-	public function similar($id, $filters=array()) {
-		$request_url = $this->buildUrl('/images/'.$id.'/similar.json');
-		$response = $this->rest_client->get($request_url, $filters);
-		$this->processResponse($response);
-		return $response;
-	}
+    private $api = null;
+    
+    public $search_defaults = array();
+
+    public function __construct($api_client) {
+        $this->api = $api_client;
+    }
 
 	public function setSearchDefaults($filters) {
 		$this->search_defaults = $filters;
@@ -28,7 +18,27 @@ class Images {
 		$this->search_defaults = array();
 	}
 	
-	public function search($filters, $media_type="images") {
+	public function get($id) {
+		$response = $this->api->get('/images/'.$id.'.json', array('language'=>$this->api->lang_code));
+		return $response;
+	}
+	
+	public function similar($id, $page=1, $sort='popular') {
+	    $filters = array('page'=>$page, 'sort'=>$sort);
+		$response = $this->api->get('/images/'.$id.'/similar.json', $filters);
+		return $response;
+	}
+	
+	public function suggestWords($image_ids) {
+		$response = $this->api->get('/images/recommendations/keywords.json', array('image_id'=>implode($image_ids,',')));
+		return $response;
+	}
+	
+	public function search($search_term, $filters=null) {
+	    if ( is_null($filters) ) {
+    	    $filters = array();
+	    }
+	    $filters['searchterm'] = $search_term;
 		static $valid_filters = array(
 			'all','search_group','searchterm','category_id','color',
 			'photographer_name',
@@ -39,10 +49,11 @@ class Images {
 			'sort_method','submitter_id'
 			);
 		$filters = array_merge($this->search_defaults, $filters);
-		$request_url = $this->buildUrl('/'.$media_type.'/search.json?'.http_build_query($filters));
-		$response = $this->rest_client->get($request_url);
-		$this->processResponse($response);
-		return $response->data;
+		if ( !isset($filters['language']) ) {
+    		$filters['language'] = $this->api->lang_code;
+		}
+		$response = $this->api->get('/images/search.json',$filters);
+		return $response;
 	}
 
 
