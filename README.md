@@ -1,4 +1,4 @@
-ss-api-client
+shutterstock-php-client
 =============
 
 * API Client classes
