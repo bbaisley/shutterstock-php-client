@@ -2,6 +2,9 @@ shutterstock-php-client
 =============
 
 See exmaple.php file for usage examples
+Be sure to run composer autoload
+
+     composer.phar dump-autoload -o
 
 * API Client classes
 * api-client : initialization, auth, test, subscriptions, lightboxes
