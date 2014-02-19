@@ -22,11 +22,6 @@ set_exception_handler( function($e) {
 $presto = new Presto\Presto();
 $response = new Shutterstock\Response();
 
-//$api = new Shutterstock\Api('hackbattle2013','9ed3c46d1b86096a09c33b8b3ff30c2233655178', $presto, $response);
-$api = new Shutterstock\Api('bigstock','f91479918b999e9be6eaa3d437e2e5496fa09a39', $presto, $response);
-
-//echo $api->authUser('bbaisley','br8ktime');
-$api->setUser('bbaisley', 'dd6864c9d555baa5dcce25540f1905009fedb8d2');
 
 //print_r($api->lightboxes());
 //print_r($api->userInfo());
@@ -47,4 +42,4 @@ $lightbox_test = new Shutterstock\Lightbox($api, 19968949);
 $images = new Shutterstock\Images($api);
 //print_r($images->get(126709091));
 //print_r($images->suggestWords(array(126709091, 127334102, 126312287, 126312281)));
-print_r($images->search('dog'));
+print_r($images->search('127334102,126312287,126312281'));

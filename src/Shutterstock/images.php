@@ -56,5 +56,15 @@ class Images {
 		return $response;
 	}
 
+    public function purchase($subscription_id, $image_id, $size, $options=null) {
+	    $url = $this->api->buildUrl('/subscriptions/'.$subscription_id.'/images/'.$image_id.'/sizes/'.$size.'.json');
+        if ( is_null($options) ) {
+            $options = array();
+        }
+        $options['auth_token'] = $this->api->auth_token;
+	    $response = $this->api->rest_client->post($url, $options);
+        $response = $this->api->response->process($response);
+        return $response;
+    }
 
 }
