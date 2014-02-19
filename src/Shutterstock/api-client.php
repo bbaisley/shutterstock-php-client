@@ -68,10 +68,8 @@ class Api {
 		$request_url = $this->buildUrl('/auth/customer.json');
 		$request_params = array('username'=>$username, 'password'=>$password);
 		$response = $this->rest_client->post($request_url, $request_params);
-		$auth_token = null;
 		$response = $this->response->process($response);
-		$auth_token = $response->data['auth_token'];
-		return $auth_token;
+		return $response;
 	}
 	
 	public function setAuthToken($auth_token) {
@@ -117,12 +115,8 @@ class Api {
 	}
 	
 	public function test() {
-		$response = $this->get('/test/echo.json?test=connect');
-		if ( $response->data['test']=='connect' ) {
-			return true;
-		} else {
-			return false;
-		}
+		$response = $this->get('/test/echo.json?test=success');
+		return $response;
 	}
 
 	public function categories() {

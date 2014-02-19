@@ -62,6 +62,9 @@ class Images {
             $options = array();
         }
         $options['auth_token'] = $this->api->auth_token;
+        if ( !isset($options['format']) ) {
+            $options['format'] = 'jpg';
+        }
 	    $response = $this->api->rest_client->post($url, $options);
         $response = $this->api->response->process($response);
         return $response;
