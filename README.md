@@ -1,6 +1,8 @@
 shutterstock-php-client
 =============
 
+See exmaple.php file for usage examples
+
 * API Client classes
 * api-client : initialization, auth, test, subscriptions, lightboxes
 * images : id, search, categories, similar, recommendations, subscriptions(download), download history
