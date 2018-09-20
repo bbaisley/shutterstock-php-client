@@ -1,3 +1,7 @@
+# DEPRECATED
+
+This repo is no longer publicly supported.
+
 shutterstock-php-client
 =============
 
