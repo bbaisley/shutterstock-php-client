@@ -1,3 +1,7 @@
+# DEPRECATED
+
+This api is deprecated.
+
 shutterstock-php-client
 =============
 
